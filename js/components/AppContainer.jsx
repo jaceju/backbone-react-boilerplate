@@ -3,7 +3,7 @@
     // var React = require('react');
     var React = root.React;
 
-    root.App = React.createClass({
+    root.AppContainer = React.createClass({
         render: function () {
             return (
                 <div className="container">

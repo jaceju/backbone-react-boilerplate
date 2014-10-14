@@ -3,7 +3,7 @@
     // var React = require('react');
     var React = root.React;
 
-    React.renderComponent(<App />, document.body);
+    React.renderComponent(<AppContainer />, document.body);
 
     // module.exports = _Template;
 })(this);
