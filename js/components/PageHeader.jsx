@@ -1,6 +1,5 @@
 /** @jsx React.DOM */
 (function (root) {
-    // var React = require('react');
     var React = root.React;
 
     root.PageHeader = React.createClass({
@@ -12,6 +11,4 @@
             );
         }
     });
-
-    // module.exports = _Template;
 })(this);
