@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backbone React Component: One model</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div id="example" class="container"></div>
+<div class="container">
+    <pre id="logger"></pre>
+</div>
+
+<script src="/bower_components/underscore/underscore.js"></script>
+<script src="/bower_components/backbone/backbone.js"></script>
+<script src="/bower_components/react/react.js"></script>
+<script src="/bower_components/react/react-with-addons.js"></script>
+<script src="/bower_components/react/JSXTransformer.js"></script>
+<script src="/bower_components/backbone-react-component/lib/component.js"></script>
+
+<script type="text/jsx">
+/** @jsx React.DOM */
+var PageHeader = React.createClass({
+
+    componentWillMount: function () {
+        logToConsole('> componentWillMount()');
+    },
+
+    componentDidMount: function () {
+        logToConsole('> componentDidMount()');
+        logToConsole('  getDOMNode');
+        logToConsole('  > className: ' + this.getDOMNode().className);
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+        logToConsole('> componentWillReceiveProps(nextProps)');
+        logToConsole('  nextProps: ' + JSON.stringify(nextProps));
+    },
+
+    handleChange: function (e) {
+        logToConsole(e.target.value);
+        this.setState({user: e.target.value});
+    },
+
+    shouldComponentUpdate: function (nextProps, nextState) {
+        logToConsole('> shouldComponentUpdate(nextProps, nextState)');
+        logToConsole('  nextProps: ' + JSON.stringify(nextProps));
+        logToConsole('  nextState: ' + JSON.stringify(nextState));
+        return true; /* need return true/false */
+    },
+
+    componentWillUpdate: function (nextProps, nextState) {
+        logToConsole('> componentWillUpdate(nextProps, nextState)');
+        logToConsole('  nextProps: ' + JSON.stringify(nextProps));
+        logToConsole('  nextState: ' + JSON.stringify(nextState));
+    },
+
+    componentWillUnmount: function () {
+        logToConsole('> componentWillUnmount()');
+    },
+
+    mixins: [
+        Backbone.React.Component.mixin
+    ],
+
+    // When the component is mounted, a wrapper starts listening to
+    // models and collections changes to automatically set your component props
+    // and achieve UI binding through reactive updates.
+    render: function () {
+        return (
+            <header>
+                <div className="page-header">
+                    <h1>{this.props.title} <small>{this.props.subTitle}</small></h1>
+                </div>
+                <button className="btn btn-primary" onClick={this.updateModel}>Update Model</button>
+                <hr />
+            </header>
+        );
+    },
+
+    updateModel: function () {
+        logToConsole('');
+        logToConsole('model.set({ ... })');
+        model.set({
+            'title': 'Hello world!',
+            'subTitle': 'Updated timestamp: ' + Date.now()
+        });
+    }
+});
+
+var model = new Backbone.Model({
+        title: 'Waiting for update...',
+        subTitle: ''
+    });
+var logger = document.querySelector('#logger');
+var example = document.querySelector('#example');
+
+function logToConsole(text) {
+    if (logger.innerText) {
+        logger.innerText += text + "\n";
+    } else {
+        logger.textContent += text + "\n";
+    }
+}
+
+logToConsole('React.renderComponent(<PageHeader model={model} />, example);');
+React.renderComponent(<PageHeader model={model} />, example);
+</script>
+
+</body>
+</html>
