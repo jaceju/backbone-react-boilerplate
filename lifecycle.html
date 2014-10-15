@@ -52,14 +52,17 @@ var Test = React.createClass({
         logToConsole('  nextState: ' + JSON.stringify(nextState));
         return true; /* need return true/false */
     },
+
     componentWillUpdate: function (nextProps, nextState) {
         logToConsole('> componentWillUpdate(nextProps, nextState)');
         logToConsole('  nextProps: ' + JSON.stringify(nextProps));
         logToConsole('  nextState: ' + JSON.stringify(nextState));
     },
+
     componentWillUnmount: function () {
         logToConsole('> componentWillUnmount()');
     },
+
     render: function () {
         return (
             <input type='text' id='foobar' value={this.state.user} className='nav' onChange={this.handleChange} />
