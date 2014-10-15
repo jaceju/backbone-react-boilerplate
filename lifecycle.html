@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lifecycle of React Component</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div id="example"></div>
+
+<pre id="logger"></pre>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.11.2/react.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.11.2/react-with-addons.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.11.2/JSXTransformer.js"></script>
+
+<script type="text/jsx">
+/** @jsx React.DOM */
+var Test = React.createClass({
+
+    getInitialState: function () {
+        logToConsole('> getInitialState()');
+        return { user: 'AndyYou' };
+    },
+
+    componentWillMount: function () {
+        logToConsole('> componentWillMount()');
+    },
+
+    componentDidMount: function () {
+        logToConsole('> componentDidMount()');
+        logToConsole('  getDOMNode');
+        logToConsole('  > className: ' + this.getDOMNode().className);
+        logToConsole('  > value: '     + this.getDOMNode().value);
+        logToConsole('  > id: '        + this.getDOMNode().id);
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+        logToConsole('> componentWillReceiveProps(nextProps)');
+        logToConsole('  nextProps: ' + JSON.stringify(nextProps));
+    },
+
+    handleChange: function (e) {
+        logToConsole(e.target.value);
+        this.setState({user: e.target.value});
+    },
+
+    shouldComponentUpdate: function (nextProps, nextState) {
+        logToConsole('> shouldComponentUpdate(nextProps, nextState)');
+        logToConsole('  nextProps: ' + JSON.stringify(nextProps));
+        logToConsole('  nextState: ' + JSON.stringify(nextState));
+        return true; /* need return true/false */
+    },
+    componentWillUpdate: function (nextProps, nextState) {
+        logToConsole('> componentWillUpdate(nextProps, nextState)');
+        logToConsole('  nextProps: ' + JSON.stringify(nextProps));
+        logToConsole('  nextState: ' + JSON.stringify(nextState));
+    },
+    componentWillUnmount: function () {
+        logToConsole('> componentWillUnmount()');
+    },
+    render: function () {
+        return (
+            <input type='text' id='foobar' value={this.state.user} className='nav' onChange={this.handleChange} />
+        );
+    }
+});
+
+var logger = document.querySelector('#logger');
+var example = document.querySelector('#example');
+
+function logToConsole(text) {
+    if (logger.innerText) {
+        logger.innerText += text + "\n";
+    } else {
+        logger.textContent += text + "\n";
+    }
+}
+
+logToConsole('React.renderComponent(<Test title=\'Untitled\' />, example)');
+var test = React.renderComponent(<Test title='Untitled' />, example);
+
+logToConsole('');
+logToConsole('test.setProps({ title: \'No\' });');
+test.setProps({ title: 'No' });
+
+logToConsole('');
+logToConsole('test.setState({ user:\'Calvert\' });');
+test.setState({ user:'Calvert' });
+
+logToConsole('');
+logToConsole('React.unmountComponentAtNode(example);');
+React.unmountComponentAtNode(example);
+</script>
+
+</body>
+</html>
