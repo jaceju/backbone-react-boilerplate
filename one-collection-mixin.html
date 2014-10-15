@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backbone React Component: One collection</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+    <div className="page-header">
+        <h1>Hello world! <small>Example of collection</small></h1>
+        <hr />
+    </div>
+    <div class="row">
+        <div class="col-lg-4" id="example"></div>
+        <div class="col-lg-8">
+            <pre id="logger"></pre>
+        </div>
+    </div>
+</div>
+
+<script src="/bower_components/underscore/underscore.js"></script>
+<script src="/bower_components/backbone/backbone.js"></script>
+<script src="/bower_components/react/react.js"></script>
+<script src="/bower_components/react/react-with-addons.js"></script>
+<script src="/bower_components/react/JSXTransformer.js"></script>
+<script src="/bower_components/backbone-react-component/lib/component.js"></script>
+
+<script type="text/jsx">
+/** @jsx React.DOM */
+var PageHeader = React.createClass({
+
+    componentWillMount: function () {
+        logToConsole('> componentWillMount()');
+    },
+
+    componentDidMount: function () {
+        logToConsole('> componentDidMount()');
+        logToConsole('  getDOMNode');
+        logToConsole('  > className: ' + this.getDOMNode().className);
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+        logToConsole('> componentWillReceiveProps(nextProps)');
+        logToConsole('  nextProps: ' + JSON.stringify(nextProps));
+    },
+
+    handleChange: function (e) {
+        logToConsole(e.target.value);
+        this.setState({user: e.target.value});
+    },
+
+    shouldComponentUpdate: function (nextProps, nextState) {
+        logToConsole('> shouldComponentUpdate(nextProps, nextState)');
+        logToConsole('  nextProps: ' + JSON.stringify(nextProps));
+        logToConsole('  nextState: ' + JSON.stringify(nextState));
+        return true; /* need return true/false */
+    },
+
+    componentWillUpdate: function (nextProps, nextState) {
+        logToConsole('> componentWillUpdate(nextProps, nextState)');
+        logToConsole('  nextProps: ' + JSON.stringify(nextProps));
+        logToConsole('  nextState: ' + JSON.stringify(nextState));
+    },
+
+    componentWillUnmount: function () {
+        logToConsole('> componentWillUnmount()');
+    },
+
+    mixins: [
+        Backbone.React.Component.mixin
+    ],
+
+    // When the component is mounted, a wrapper starts listening to
+    // models and collections changes to automatically set your component props
+    // and achieve UI binding through reactive updates.
+    render: function () {
+        return (
+            <section>
+                <button className="btn btn-primary" onClick={this.insertItem}>Insert Item</button>
+                <hr />
+                <ul className="nav nav-pills nav-stacked">
+                    {this.props.collection.map(this.showItems)}
+                </ul>
+            </section>
+        );
+    },
+
+    showItems: function (model) {
+        return (
+            <li key={model.id}><a href="#">{model.text}</a></li>
+        );
+    },
+
+    insertItem: function () {
+        logToConsole('');
+        logToConsole('collection.add({ ... })');
+        index += 1;
+        collection.add({
+            id: index,
+            text: 'Item ' + index
+        });
+    }
+});
+
+var index = 1;
+var collection = new Backbone.Collection([
+        {
+            id: index,
+            text: 'Item ' + index
+        }
+    ]);
+var logger = document.querySelector('#logger');
+var example = document.querySelector('#example');
+
+function logToConsole(text) {
+    if (logger.innerText) {
+        logger.innerText += text + "\n";
+    } else {
+        logger.textContent += text + "\n";
+    }
+}
+
+logToConsole('React.renderComponent(<PageHeader collection={collection} />, example);');
+React.renderComponent(<PageHeader collection={collection} />, example);
+</script>
+
+</body>
+</html>
